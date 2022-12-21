@@ -1,0 +1,36 @@
+/**
+ * Root project.
+ *
+ * @author [Siniša Sovilj](mailto:sinisa.sovilj@unipu.hr)
+ */
+
+group 'hr.unipu'
+version '1.0-SNAPSHOT'
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+}
+
+/**
+ ******************  JPro Script Configuration ******************
+ */
+buildscript {
+    repositories {
+        mavenCentral()
+
+        maven {
+            url "https://sandec.jfrog.io/artifactory/repo"
+        }
+    }
+
+    dependencies {
+        classpath 'com.sandec.jpro:jpro-plugin-gradle:2022.1.8'
+    }
+}
+
+subprojects {
+    version = '1.0'
+}

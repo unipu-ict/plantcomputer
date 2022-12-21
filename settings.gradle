@@ -1,0 +1,3 @@
+rootProject.name = 'Plant_Computer_Gateway'
+
+include 'iotapp'

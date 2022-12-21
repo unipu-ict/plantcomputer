@@ -1,0 +1,313 @@
+/**
+ * Subproject "iotapp".
+ *
+ * @author [Siniša Sovilj](mailto:sinisa.sovilj@unipu.hr)
+ * @author [Dalibor Fonović](mailto:dalibor.fonovic@unipu.hr)
+ */
+
+plugins {
+    id 'application'
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.20'
+
+    // (Open) JavaFX Gradle plugin.
+    id 'org.openjfx.javafxplugin' version '0.0.9'
+
+    // Gradle SSH Plugin.
+    // - Plugin which provides remote command execution and file transfer features.
+    id 'org.hidetake.ssh' version "2.10.1"
+
+    // Spring Boot plugin.
+    id 'org.springframework.boot' version '2.5.2'
+
+}
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.google.osdetector'
+apply plugin: 'com.sandec.jpro'
+
+
+/**
+ ******************  JavaFX Configuration ******************
+ */
+
+/**
+ * Version, group, JAR name (instead of module name).
+ */
+archivesBaseName = 'iotapp'    // Instead of long name: Plant_Computer_Gateway.jar
+group 'hr.unipu'
+version ''     // '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+/**
+ * Required JavaFX modules.
+ * - javafx.web dependency is used by TilesFX.
+ */
+javafx {
+    version = "11.0.2"
+    modules = [ 'javafx.controls', 'javafx.web' ]
+}
+
+ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
+    /* uncomment for cross-platform jar: */
+    //runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
+    //runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:linux"
+    //runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:mac"
+
+    compile "org.openjfx:javafx-base:11:$platform"
+    compile "org.openjfx:javafx-graphics:11:$platform"
+    compile "org.openjfx:javafx-controls:11:$platform"
+    compile "org.openjfx:javafx-fxml:11:$platform"
+    compile "org.openjfx:javafx-media:11:$platform"
+    compile "org.openjfx:javafx-web:11:$platform"
+
+    // TilesFX
+    // - Maven: https://mvnrepository.com/artifact/eu.hansolo/tilesfx
+    // - Github: https://github.com/HanSolo/tilesfx/wiki
+    implementation group: 'eu.hansolo', name: 'tilesfx', version: '11.48'
+
+
+    // Eclipse Paho (Client Mqttv3) - to communicate with an MQTT server.
+    // - Maven: https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3
+    // - Github: https://github.com/eclipse/paho.mqtt.java
+    implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
+
+
+    // Jackson - Java JSON library.
+    // - Maven: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    // - GitHub: https://github.com/FasterXML/jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
+
+    // Influxdb - database client for Java.
+    // GitHub: https://github.com/influxdata/influxdb-client-java
+    // - run influxDB deamon in PowerShell:
+    //      > cd 'C:\Program Files\InfluxData\influxdb'
+    //      > ./influxd --reporting-disabled
+    implementation "com.influxdb:influxdb-client-java:6.3.0"
+
+    // JUnit 4 + TestFX
+    testImplementation "junit:junit:4.13.2"                 // Latest: 4.13.2
+    testImplementation "org.testfx:testfx-core:4.0.+"       // Latest: 4.0.16-alpha
+    testImplementation  "org.testfx:testfx-junit:4.0.+"     // Latest: 4.0.16-alpha
+
+    // Junit 5 + TestFX
+    //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
+    //testImplementation "org.testfx:testfx-junit5:4.0.16-alpha"
+
+    // Hamcrest & AssertJ
+    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.1'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.13.2'
+
+}
+
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+
+/**
+ * Choosing main class: can be either Java or Kotlin code.
+ * Essential only for 'run' task.
+ */
+application {
+    // Java code.
+    mainClassName = 'hr.unipu.LauncherJava'
+    //mainClassName = 'hr.unipu.PlantComputerApplicationJava'
+
+    // Kotlin code.
+    //mainClassName = 'hr.unipu.LauncherKotlin'
+    //mainClassName = 'hr.unipu.PlantComputerApplicationKotlin'
+}
+
+/**
+ * Because some file encoding errors - (čžš etc.).
+ */
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+
+/**
+ * Remote host.
+ */
+remotes {
+    rpi01 {
+        host = '192.168.15.241'
+        user = 'pi'             // default: pi
+        password = 'raspberry'  // default: raspberry
+    }
+}
+
+/**
+ * Create Fat Jar. (with SpringBoot)
+ */
+
+// Generating Fat Jar.
+bootJar {
+    enabled = true
+}
+
+// Generates plain jar.
+jar {
+    enabled = false
+    duplicatesStrategy = DuplicatesStrategy.WARN
+
+    manifest {
+        // Java code
+        //attributes 'Main-Class': 'hr.unipu.LauncherJava'    // package.myMainClassName
+        //attributes 'Main-Class': 'hr.unipu.PlantComputerApplicationJava'    // package.myMainClassName
+
+        // Kotlin code
+        attributes 'Main-Class': 'hr.unipu.LauncherKotlin'    // package.myMainClassName
+        //attributes 'Main-Class': 'hr.unipu.PlantComputerApplicationKotlin'    // package.myMainClassName
+
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+
+/**
+ * Deploy task.
+ */
+task deploy {
+    //dependsOn 'jar'       // Generates "-plain" jar. (Spring Boot)
+    dependsOn 'bootJar'     // Generates Fat jar. (Spring Boot)
+    doLast {
+        ssh.settings {
+            knownHosts = allowAnyHosts
+        }
+        ssh.run {
+            session(remotes.rpi01) {
+                // Testing
+                println("Root folder: ${project.rootDir}")
+                println("Project folder: ${project.projectDir}")
+                println("Build folder: ${project.buildDir}")
+                println("Gradle folder: ${project.rootDir}\\.gradle")
+
+
+                // Copy within working computer.
+                copy {
+                    exclude "**/.gradle/**"
+                    exclude "**/Plant_Computer_Gateway/**"
+                    from "${project.rootDir}"
+                    into "$buildDir/Plant_Computer_Gateway"
+                }
+
+                // Remove old RPi project first.
+                remove '/home/pi/Documents/JAVA-KOTLIN/Plant_Computer_Gateway'
+
+
+                // Deploy at RPi.
+                put from: "$buildDir/Plant_Computer_Gateway",
+                    into: "/home/pi/Documents/JAVA-KOTLIN"
+
+
+                // Execute (not working remotely).
+                //execute 'chmod +x ./gradlew'
+                //execute './gradlew run'
+
+
+                // Run Jar at Rpi.
+                execute "pwd"
+                // Not possible to run JavaFX from Gradle (Unable to open DISPLAY). Need to run it from RPi.
+                //execute "java -jar /home/pi/Documents/JAVA-KOTLIN/Plant_Computer_Gateway/app/build/libs/iotapp.jar"
+
+            }
+        }
+    }
+}
+
+/**
+ * Print classpath (for JShell).
+ */
+task printClasspath {
+    doLast {
+        println sourceSets.main.runtimeClasspath.asPath
+    }
+}
+
+
+/**
+ ******************  JPro Configuration ******************
+ */
+
+compileJava {
+    sourceCompatibility = 11
+    targetCompatibility = 11
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.fxml,javafx.controls'
+        ]
+    }
+}
+
+// spring-boot dependency management declares that webjars-locator-core will be of version 0.48,
+// and during build, jpro plugin picks up 0.48 and puts it in \jprolibs instead of 0.37
+ext['webjars-locator-core.version'] = '0.37'
+
+
+// Gradle: run --args='--simulationMode=true' (but doesn't run with jproRun)
+run {
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.fxml,javafx.controls',
+                // used for attaching remote debugger
+                //"--java-opts", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+        ]
+    }
+}
+
+// Gradle debug mode:
+// - 1) Gradle: run --debug-jvm
+//      > Listening for transport dt_socket at address: 5005 (Attach debugger)
+// - 2) Remote Debug: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+tasks.withType(JavaExec) {
+    if (System.getProperty('DEBUG', 'false') == 'true') {
+        jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
+    }
+}
+
+/**
+ * App Main Class (for JPro).
+ */
+
+// Java code
+//mainClassName = 'hr.unipu.LauncherJava'
+mainClassName = 'hr.unipu.PlantComputerApplicationJava'     // !!! Main app needs to extend javafx.application.Application
+
+// Kotlin code
+//mainClassName = 'hr.unipu.LauncherKotlin'
+//mainClassName = 'hr.unipu.PlantComputerApplicationKotlin'     // !!! Main app needs to extend javafx.application.Application
+
+
+/**
+ * jpro settings
+ * - For killing process on port 8080: npx kill-port 8080
+ */
+jpro {
+    // for debugging
+    // JVMArgs << '-agentlib:jdwp=transport=dt_socket,server=n,address=5006,suspend=y'
+
+    JVMArgs << '-Xmx1000m'
+
+    //jpro server port
+    port = 8080
+}

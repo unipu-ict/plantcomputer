@@ -1,0 +1,15 @@
+{
+  "_id": "test",
+  "version": "6.1.7",
+  "format": "simple",
+  "operations": [
+    [ 0, "one", 1 ],
+    [ 0, "two", 2 ],
+    [ 0, "three", 3 ],
+    [ 60, "four", 4 ],
+    [ 60, "five", 5 ],
+    [ 120, "six", 6 ],
+    [ 120, "seven", 7 ],
+    [ 180, "eight", 8 ]
+  ]
+}

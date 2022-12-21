@@ -1,0 +1,11 @@
+{
+  "_id": "air_water_test",
+  "format": "simple",
+  "version": "0.0.1",
+  "operations": [
+    [0, "air_temperature", 24],
+    [0, "water_temperature", 22],
+    [30, "air_temperature", 25],
+    [30, "water_temperature", 23]
+  ]
+}
