@@ -68,7 +68,7 @@ To deploy *plant computer* (fat jar generated with Spring Boot) on Raspberry Pi:
 ```
 ./gradlew deploy
 ```
-then run jar (> java -jar iotapp.jar) on RPi.
+then run jar in terminal (> java -jar iotapp.jar) on RPi.
 
 
 ## Built With
