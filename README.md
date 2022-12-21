@@ -1,4 +1,4 @@
-# “Plant Computer” – open-spurce implementation in Java/Kotlin
+# “Plant Computer” – open-source implementation in Java/Kotlin
 
 **Plant Computer** is a new, improved open-source version of a 
 computer system for plant replication in a controlled environment. 
@@ -86,14 +86,14 @@ then run jar (java -jar iotapp.jar) on RPi.
 
 To run all available Java test run:
 ```
-./gradlew :iotapp:test 
+./gradlew test 
 --tests "hr.unipu.A_PlantComputerAppTestJava" 
 --tests "hr.unipu.B_UserInterfaceTestJava" 
 --tests "hr.unipu.C_RecipeTestJava"
 ```
 or to run all available Kotlin test run:
 ```
-./gradlew :iotapp:test 
+./gradlew test 
 --tests "hr.unipu.A_PlantComputerAppTest" 
 --tests "hr.unipu.B_UserInterfaceTest" 
 --tests "hr.unipu.C_RecipeTest"
