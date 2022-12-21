@@ -41,7 +41,7 @@ To run Gradle tasks, from IntelliJ one can use *Terminal window*
 use Gradle Plugin in IntelliJ.)
 
 #### Example:
-To run *plant computer* user interface in default real *measurement mode* simply use:
+To run *plant computer* (as desktop app) in real *measurement mode* simply use:
 ```
 ./gradlew run
 ```
@@ -52,13 +52,13 @@ or more verbose:
 
 ![](images/Figure03.png?raw=true)
 
-To run *plant computer* user interface in *simulation mode* turn it on 
-(or alternatively with Gradle plugin set: run --args='--simulationMode=true').
+To run *plant computer* (as desktop app) in *simulation mode* - turn it on 
+(or alternatively using Gradle plugin set: run --args='--simulationMode=true').
 ```
 ./gradlew :iotapp:run --args='--simulationMode=true'
 ```
 
-To run *plant computer* user interface in web browser (http://localhost:8080/):
+To run *plant computer* (as web application) in web browser (http://localhost:8080/):
 ```
 ./gradlew jproRun
 ```
@@ -68,7 +68,7 @@ To deploy *plant computer* (fat jar generated with Spring Boot) on Raspberry Pi:
 ```
 ./gradlew deploy
 ```
-then run jar (java -jar iotapp.jar) on RPi.
+then run jar (> java -jar iotapp.jar) on RPi.
 
 
 ## Built With
@@ -84,14 +84,14 @@ then run jar (java -jar iotapp.jar) on RPi.
 
 ## Testing
 
-To run all available Java test run:
+To run all available Java test:
 ```
 ./gradlew test 
 --tests "hr.unipu.A_PlantComputerAppTestJava" 
 --tests "hr.unipu.B_UserInterfaceTestJava" 
 --tests "hr.unipu.C_RecipeTestJava"
 ```
-or to run all available Kotlin test run:
+or to run all available Kotlin test:
 ```
 ./gradlew test 
 --tests "hr.unipu.A_PlantComputerAppTest" 
@@ -122,7 +122,7 @@ This project is licensed under the Apache License 2.0 license. See the [LICENSE]
 
 
 ## Acknowledgments
-*Plant computer* was inspired by discontinued MIT
+*Plant Computer* was inspired by discontinued MIT
 Open Agriculture Foundation project 
 [OpenAg](https://github.com/OpenAgricultureFoundation) 
 and the exceptional contribution of students Mislav Hager and Mateo Kovaček.
