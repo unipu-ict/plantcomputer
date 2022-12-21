@@ -52,11 +52,11 @@ or more verbose:
 
 ![](images/Figure03.png?raw=true)
 
-To run *plant computer* (as desktop app) in *simulation mode* - turn it on 
-(or alternatively using Gradle plugin set: run --args='--simulationMode=true').
+To run *plant computer* (as desktop app) in *simulation mode* - turn it on:
 ```
 ./gradlew :iotapp:run --args='--simulationMode=true'
 ```
+(or alternatively use Gradle plugin and set: run --args='--simulationMode=true').
 
 To run *plant computer* (as web application) in web browser (http://localhost:8080/):
 ```
