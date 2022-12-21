@@ -86,14 +86,14 @@ then run jar (java -jar iotapp.jar) on RPi.
 
 To run all available Java test run:
 ```
-./gradlew :app:test 
+./gradlew :iotapp:test 
 --tests "hr.unipu.A_PlantComputerAppTestJava" 
 --tests "hr.unipu.B_UserInterfaceTestJava" 
 --tests "hr.unipu.C_RecipeTestJava"
 ```
 or to run all available Kotlin test run:
 ```
-./gradlew :app:test 
+./gradlew :iotapp:test 
 --tests "hr.unipu.A_PlantComputerAppTest" 
 --tests "hr.unipu.B_UserInterfaceTest" 
 --tests "hr.unipu.C_RecipeTest"
