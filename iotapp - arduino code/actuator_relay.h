@@ -1,9 +1,3 @@
-/** 
- *  \file actuator_relay.h
- *  \brief Actuator module for an active low SPST-NO relay.
- *  \author Jake Rye
- */
- 
 #ifndef ACTUATOR_RELAY_H
 #define ACTUATOR_RELAY_H
 
