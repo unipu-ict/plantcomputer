@@ -9,9 +9,7 @@
 
 #include "module_handler.h"
 
-/**
- * \brief Actuator module for an active low SPST-NO relay.
- */
+
 class ActuatorRelay {
   //------------------------------------------------PUBLIC---------------------------------------------//
   public:
